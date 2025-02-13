@@ -1,0 +1,27 @@
+//@version=5
+strategy("AZIZ savings", pyramiding=10, initial_capital = 100, default_qty_value = 10, default_qty_type = strategy.cash, commission_type = strategy.commission.percent, commission_value = 0.035, overlay=true)
+
+// User Inputs
+i_dcaTriggerPct = input.float(0.75, title="DCA Trigger %", minval=0.25, step=0.25)
+i_tpPct = input.float(2.25, title="Take Profit %", minval=0.25, step=0.25)
+
+var float lastDcaPrice = close
+
+currentDcaPrice = lastDcaPrice * (1 - i_dcaTriggerPct / 100)
+
+if close < currentDcaPrice
+    strategy.entry("Buy", strategy.long)
+    lastDcaPrice := close
+
+takeProfitPrice = strategy.position_avg_price * (1 + i_tpPct / 100)
+
+if strategy.position_size > 0 and high > takeProfitPrice
+    strategy.close("Buy", comment="Take Profit")
+    lastDcaPrice := close
+
+// if strategy.position_size > 0 and barstate.islastconfirmedhistory
+    // strategy.close("Buy")
+
+// Plot DCA and TP line
+plot(series=strategy.position_avg_price, color=color.rgb(146, 158, 184), title="Median", linewidth=1, style=plot.style_stepline)
+plot(series=strategy.position_avg_price * (1 + i_tpPct / 100), color=color.rgb(211, 77, 160), title="Take Profit", linewidth=1, style=plot.style_stepline)
