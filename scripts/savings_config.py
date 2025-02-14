@@ -14,10 +14,10 @@ class ExcaliburConfig(StrategyV2ConfigBase):
 
     candles_config: List[CandlesConfig] = Field(default_factory=lambda: [
         CandlesConfig(
-            connector="binance",
-            interval="3m",
+            connector="hyperliquid_perpetual",
+            interval="1m",
             max_records=20,
-            trading_pair = "SOL-USDT"
+            trading_pair = "BTC-USD"
         )
     ])
 
@@ -27,8 +27,8 @@ class ExcaliburConfig(StrategyV2ConfigBase):
 
     # Used by PkStrategy
     connector_name: str = "hyperliquid_perpetual"
-    trading_pair: str = "SOL-USD"
-    leverage: int = 20
+    trading_pair: str = "BTC-USD"
+    leverage: int = 2
     unfilled_order_expiration: int = 60
     limit_take_profit_price_delta_bps: int = 0
 
@@ -38,6 +38,6 @@ class ExcaliburConfig(StrategyV2ConfigBase):
 
     # Order settings
     amount_quote: Decimal = 15.0  # Hyperliquid rejects orders less than $10
-    pyramiding: int = 10
-    dca_trigger_pct: Decimal = 0.75
-    tp_pct: Decimal = 2.25
+    pyramiding: int = 25
+    dca_trigger_pct: Decimal = 0.4
+    tp_pct: Decimal = 1
